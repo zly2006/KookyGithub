@@ -17,7 +17,7 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
     implementation("org.slf4j:slf4j-simple:1.7.36")
-    implementation("com.github.KookyBot:KookyBot:0.2.3")
+    implementation("com.github.KookyBot:KookyBot:0.2.4")
     implementation("org.yaml:snakeyaml:1.30")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
     implementation("com.mojang:brigadier:1.0.18")
@@ -29,7 +29,7 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "17"
 }
 
 application {

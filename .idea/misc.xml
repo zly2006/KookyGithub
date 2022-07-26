@@ -10,4 +10,26 @@
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
+  <component name="UnattendedHostPersistenceState">
+    <option name="openedFilesInfos">
+      <list>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="181" />
+          <option name="fileUrl" value="file://$PROJECT_DIR$/src/main/resources/simplelogger.properties" />
+        </OpenedFileInfo>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="3687" />
+          <option name="fileUrl" value="file://$PROJECT_DIR$/src/main/kotlin/Main.kt" />
+        </OpenedFileInfo>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="2392" />
+          <option name="fileUrl" value="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.KookyBot/KookyBot/0.2.3/785f4de79f9ce7f78bd3b062bf00b9994cb46f2c/KookyBot-0.2.3-sources.jar!/io/github/kookybot/contract/Channel.kt" />
+        </OpenedFileInfo>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="474" />
+          <option name="fileUrl" value="file://$PROJECT_DIR$/build.gradle.kts" />
+        </OpenedFileInfo>
+      </list>
+    </option>
+  </component>
 </project>
