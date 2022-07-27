@@ -28,7 +28,7 @@ class MyListener: Listener {
     @EventHandler
     @Filter("git.alive")
     fun alive(source: CommandSource) {
-        source.sendMessage("alive")
+        source.sendMessage("alive\n[喜欢请给个五星好评吧](https://www.botmarket.cn/bots?id=43)")
     }
     @EventHandler
     fun c(channelMessageEvent: ChannelMessageEvent) {
@@ -44,12 +44,22 @@ class MyListener: Listener {
             repo2channel[repo]!!.add(source.channel!!.id)
             save()
         }
-        source.sendMessage("bind $repo to this channel!")
+        source.sendMessage("bind $repo to this channel!\n[喜欢请给个五星好评吧](https://www.botmarket.cn/bots?id=43)")
+    }
+    @EventHandler
+    @Filter("git.unbind\\({repo,[\\w\\-]+/[\\w\\-]+}\\)")
+    fun unbind(repo: String, source: CommandSource) {
+        if (source.type != CommandSource.Type.Channel) return
+        repo2channel[repo] = repo2channel[repo] ?: mutableListOf()
+        if (!repo2channel[repo]!!.contains(source.channel!!.id)) {
+            repo2channel[repo]!!.removeAll(listOf(source.channel!!.id))
+            save()
+        }
+        source.sendMessage("Unbind $repo to this channel!\n[喜欢请给个五星好评吧](https://www.botmarket.cn/bots?id=43)")
     }
 }
 
 suspend fun main(args: Array<String>) {
-
     val client = Client("1/MTIxNjE=/jo1GnVpFTJ709ulCgCJxxQ==") {
         enableCommand = true
         responseCommandExceptions = false
@@ -158,6 +168,7 @@ suspend fun main(args: Array<String>) {
                     val after = json["after"].asString.substring(0 until 8)
                     println("$repo $ref")
                     if (ref.startsWith("efs/tags/")) return@createContext
+
                     val branch = ref.substring(11)
                     val commits = json["commits"].asJsonArray.map {
                         val c = it.asJsonObject
