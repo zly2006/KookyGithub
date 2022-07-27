@@ -47,11 +47,33 @@ class MyListener: Listener {
         source.sendMessage("bind $repo to this channel!\n[喜欢请给个五星好评吧](https://www.botmarket.cn/bots?id=43)")
     }
     @EventHandler
+    @Filter("git.bind({repo,[\\w\\-]+/[\\w\\-]+})")
+    fun bind2(repo: String, source: CommandSource) {
+        if (source.type != CommandSource.Type.Channel) return
+        repo2channel[repo] = repo2channel[repo] ?: mutableListOf()
+        if (!repo2channel[repo]!!.contains(source.channel!!.id)) {
+            repo2channel[repo]!!.add(source.channel!!.id)
+            save()
+        }
+        source.sendMessage("bind $repo to this channel!\n[喜欢请给个五星好评吧](https://www.botmarket.cn/bots?id=43)")
+    }
+    @EventHandler
     @Filter("git.unbind\\({repo,[\\w\\-]+/[\\w\\-]+}\\)")
     fun unbind(repo: String, source: CommandSource) {
         if (source.type != CommandSource.Type.Channel) return
         repo2channel[repo] = repo2channel[repo] ?: mutableListOf()
-        if (!repo2channel[repo]!!.contains(source.channel!!.id)) {
+        if (repo2channel[repo]!!.contains(source.channel!!.id)) {
+            repo2channel[repo]!!.removeAll(listOf(source.channel!!.id))
+            save()
+        }
+        source.sendMessage("Unbind $repo to this channel!\n[喜欢请给个五星好评吧](https://www.botmarket.cn/bots?id=43)")
+    }
+    @EventHandler
+    @Filter("git.unbind({repo,[\\w\\-]+/[\\w\\-]+})")
+    fun unbind2(repo: String, source: CommandSource) {
+        if (source.type != CommandSource.Type.Channel) return
+        repo2channel[repo] = repo2channel[repo] ?: mutableListOf()
+        if (repo2channel[repo]!!.contains(source.channel!!.id)) {
             repo2channel[repo]!!.removeAll(listOf(source.channel!!.id))
             save()
         }
@@ -182,29 +204,50 @@ suspend fun main(args: Array<String>) {
                         }
                     }
 
-                    sendCard(repo) {
-                        Card {
-                            HeaderModule(
-                                PlainTextElement("New push event to $repo:$branch")
-                            )
-                            Divider()
-                            SectionModule(
-                                text = MarkdownElement("[$sender]($senderUrl) pushed ${commits.size} commit to [$repo]($repoUrl)"),
-                                accessory = ImageElement(
-                                    json["sender"].asJsonObject["avatar_url"].asString,
-                                    "face",
-                                    CardMessage.Size.SM,
-                                    true
-                                ),
-                                mode = CardMessage.LeftRight.Left,
-                            )
-                            ContextModule {
-                                MarkdownElement("$before -> $after")
-                            }
-                            commits.forEach {
-                                SectionModule(
-                                    text = MarkdownElement(it.toString())
+                    if (after.matches(Regex("^0+$"))) {
+                        sendCard(repo) {
+                            Card {
+                                HeaderModule(
+                                    PlainTextElement("New push event to $repo")
                                 )
+                                Divider()
+                                SectionModule(
+                                    text = MarkdownElement("[$sender]($senderUrl) deleted branch $branch of [$repo]($repoUrl)"),
+                                    accessory = ImageElement(
+                                        json["sender"].asJsonObject["avatar_url"].asString,
+                                        "face",
+                                        CardMessage.Size.SM,
+                                        true
+                                    ),
+                                    mode = CardMessage.LeftRight.Left,
+                                )
+                            }
+                        }
+                    } else {
+                        sendCard(repo) {
+                            Card {
+                                HeaderModule(
+                                    PlainTextElement("New push event to $repo:$branch")
+                                )
+                                Divider()
+                                SectionModule(
+                                    text = MarkdownElement("[$sender]($senderUrl) pushed ${commits.size} commit to [$repo]($repoUrl)"),
+                                    accessory = ImageElement(
+                                        json["sender"].asJsonObject["avatar_url"].asString,
+                                        "face",
+                                        CardMessage.Size.SM,
+                                        true
+                                    ),
+                                    mode = CardMessage.LeftRight.Left,
+                                )
+                                ContextModule {
+                                    MarkdownElement("$before -> $after")
+                                }
+                                commits.forEach {
+                                    SectionModule(
+                                        text = MarkdownElement(it.toString())
+                                    )
+                                }
                             }
                         }
                     }
